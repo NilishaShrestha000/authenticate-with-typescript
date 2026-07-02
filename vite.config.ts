@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://192.168.150.169:3000",
+        target: "https://auth.durlavparajuli.com.np",
         changeOrigin: true,
       },
     },

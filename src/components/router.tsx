@@ -22,6 +22,7 @@ import Profile from "@/pages/Profile";
 import AllProfile from "@/pages/AllProfiles";
 import ProfileDetail from "@/pages/ProfileDetail";
 import AdminMangeAervice from "@/pages/AdminManageServices";
+import Settings from "@/pages/Settings";
 
 const router = createBrowserRouter([
     {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
             {
                 path: "profile",
                 element: <Profile />,
+            },
+            {
+                path: "settings",
+                element: <Settings />,
             },
 
             {

@@ -44,7 +44,7 @@ const Register = () => {
             <div className="flex items-center justify-center min-h-screen transition-all p-5">
                 <div className="h-full w-full md:h-3/4 md:w-3/5 flex flex-col items-center justify-center md:rounded-2xl md:border-3 p-5">
                     <div className="flex flex-col items-center text-center md:gap-4">
-                        <div className="flex text-violet-600 items-center justify-center w-15 h-15 bg-violet-400/50 rounded-full"><FaRegUser className="text-2xl" /></div>
+                        <div className="flex text-orange-600 items-center justify-center w-15 h-15 bg-orange-400/50 rounded-full"><FaRegUser className="text-2xl" /></div>
                         <h1 className="text-2xl font-bold">Create Account</h1>
                         <p className="text-lg text-gray-500">Fill in the details <span className="hidden md:block">to create your account</span></p>
                     </div>
@@ -73,13 +73,13 @@ const Register = () => {
                             </div>
 
                             <div className="mt-5">
-                                <button type="submit" className="w-full border rounded px-4 py-2 bg-violet-600/50 hover:bg-violet-800 text-white">Register</button>
+                                <button type="submit" className="w-full border rounded px-4 py-2 bg-orange-600/50 hover:bg-orange-800 text-white">Register</button>
                                 <ToastContainer />
                             </div>
 
                             <div className="mt-5 flex gap-3 justify-center">
                                 <p>Already have an account? </p>
-                                <Link to="/login" className="text-violet-600 hover:text-red-500">Login</Link>
+                                <Link to="/login" className="text-orange-400 hover:text-red-500">Login</Link>
                             </div>
                         </Form>
                     </Formik>

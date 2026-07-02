@@ -49,7 +49,7 @@ const Login = () => {
 
                     {/* Left panel */}
                     <div className="hidden md:block">
-                        <div className="bg-violet-600/50 flex h-full items-center justify-center tracking-wide px-10 rounded-l-2xl">
+                        <div className="bg-orange-600/50 flex h-full items-center justify-center tracking-wide px-10 rounded-l-2xl">
                             <div className="flex flex-col items-center text-center">
                                 <img src="/security.png" className="h-30 w-30 mb-5" alt="Security" />
                                 <h1 className="font-semibold text-2xl mb-5">Welcome Back!</h1>
@@ -61,7 +61,7 @@ const Login = () => {
                     {/* Right panel */}
                     <div className="w-full md:w-3/4 flex flex-col items-center justify-center md:rounded-r-2xl mt-5">
                         <div className="flex flex-col items-center text-center gap-4">
-                            <div className="flex text-violet-600 items-center justify-center w-15 h-15 bg-violet-400/50 rounded-full">
+                            <div className="flex text-orange-600 items-center justify-center w-15 h-15 bg-orange-400/50 rounded-full">
                                 <FaRegUser className="text-2xl" />
                             </div>
                             <h1 className="text-2xl font-bold">Login</h1>
@@ -100,7 +100,7 @@ const Login = () => {
                                     <Checkbox name="rememberMe" className="cursor-pointer">
                                         Remember Me
                                     </Checkbox>
-                                    <Link to="/forgot-password" className="text-violet-600 hover:text-red-500">
+                                    <Link to="/forgot-password" className="text-orange-400 hover:text-red-500">
                                         Forgot password?
                                     </Link>
                                 </div>
@@ -108,7 +108,7 @@ const Login = () => {
                                 <div className="mt-5">
                                     <button
                                         type="submit"
-                                        className="w-full border rounded px-4 py-2 bg-violet-600/50 hover:bg-violet-500 text-white">
+                                        className="w-full border rounded px-4 py-2 bg-orange-600/50 hover:bg-orange-500 text-white">
                                         Login
                                     </button>
                                     <ToastContainer />
@@ -116,7 +116,7 @@ const Login = () => {
 
                                 <div className="mt-5 flex gap-3 justify-center">
                                     <p>Don't have an account?</p>
-                                    <Link to="/register" className="text-violet-600 hover:text-red-500">
+                                    <Link to="/register" className="text-orange-400 hover:text-red-500">
                                         Register
                                     </Link>
                                 </div>

@@ -1,32 +1,29 @@
 import Api from "@/Api/api";
 import { MdDelete } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
 import { useState } from "react";
-
-interface DeleteUserProps {
-    id: string;
-}
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type DeleteUserProps } from "@/typscript/interfaces&types";
 
 const DeleteUser = ({ id }: DeleteUserProps) => {
-
+    const queryClient = useQueryClient();
     const [isConfirming, setIsConfirming] = useState<boolean>(false);
-    const handleDelete = async (): Promise<void> => {
 
-
-        try {
-            await Api.delete(`/api/admin/users/${id}`);
-            toast.success("User Deleted !")
+    const { mutate: DeleteUser, isPending } = useMutation({
+        mutationFn: () => Api.delete(`/api/admin/users/${id}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+            toast.success("User deleted successfully!");
             setIsConfirming(false);
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                console.error(err.response?.data);
-            } else {
-                toast.error("User not Deleted");
-                console.error(err);
-            }
+        },
+        onError: () => {
+            toast.error("User Not Deleted");
         }
-    };
+    });
+
+    const handleDelete = (): void => {
+        DeleteUser();
+    }
 
     return (
         <>
@@ -55,6 +52,7 @@ const DeleteUser = ({ id }: DeleteUserProps) => {
                             <button
                                 type="button"
                                 onClick={handleDelete}
+                                disabled={isPending}
                                 className="flex-1 bg-red-400/20 hover:bg-red-400/30 border border-red-400/60 hover:border-red-400 text-red-400 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200">
                                 Delete
                             </button>

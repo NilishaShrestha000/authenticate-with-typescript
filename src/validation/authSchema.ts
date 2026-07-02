@@ -81,3 +81,18 @@ export const PostServicesSchema = Yup.object({
     tags: Yup.array()
         .required("Required")
 })
+
+
+export const ChangePsswordSchema = Yup.object({
+    currentPassword: Yup.string()
+        .required("Current password is required"),
+    newPassword: Yup.string()
+        .min(8, "Must be at least 8 characters")
+        .matches(/[a-z]/, "Must contain at least 1 small letter.")
+        .matches(/[A-Z]/, "Must contain at least 1 capital letter.")
+        .matches(/[0-9]/, "Must contain at least 1 number.")
+        .required("Required"),
+    confirmNewPassword: Yup.string()
+        .oneOf([Yup.ref("newPassword")], "Confirm Password must match New Password.")
+        .required("Required"),
+});

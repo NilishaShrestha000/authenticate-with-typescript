@@ -28,7 +28,7 @@ const Detail = () => {
             {/* Selected service */}
             <div className="border border-gray-700 rounded-2xl p-5 lg:flex lg:gap-8">
                 <img
-                    src={`http://192.168.150.169:3000/public/${service.image}`}
+                    src={`https://auth.durlavparajuli.com.np/public/${service.image}`}
                     className="w-full h-200 lg:w-1/2 rounded-xl object-cover"
                     alt={service.title}
                 />

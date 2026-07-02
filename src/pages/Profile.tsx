@@ -4,18 +4,12 @@ import { FiEdit2, FiX } from "react-icons/fi";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { useState } from "react";
 import ProfileSidebar from "@/components/ProfileSidebar";
-
-interface FormState {
-    fullName: string;
-    email: string;
-    phone: string;
-}
+import { type FormState } from "@/typscript/interfaces&types"
+import { Link } from "react-router-dom";
 
 const Profile = () => {
-    const { profile, loading } = useMyProfile();
-    const { patchProfile, loading: patching, error: patchError } = usePatchMyProfile();
-
-
+    const { data: profile, isLoading: loading } = useMyProfile();
+    const { mutate: patchProfile, isPending: patching, error: patchError } = usePatchMyProfile();
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [form, setForm] = useState<FormState>({
@@ -40,16 +34,11 @@ const Profile = () => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = async (): Promise<void> => {
-        try {
-            await patchProfile(form);
-
-        } catch {
-            if (!patchError) {
-                setIsEditing(false);
-                window.location.reload();
-            }
-        }
+    const handleSubmit = (e: React.FormEvent): void => {
+        e.preventDefault();
+        patchProfile(form, {
+            onSuccess: () => setIsEditing(false)
+        });
     };
 
     const getInitials = (name: string): string => {
@@ -79,8 +68,11 @@ const Profile = () => {
                 )}
 
                 {!loading && !profile && (
-                    <div className="flex items-center justify-center h-full text-slate-400">
-                        No profile found.
+                    <div className="items-center justify-center flex flex-1 min-h-screen text-slate-400 flex-col gap-3">
+                        <p>Login to have access</p>
+                        <Link to="/login" className="text-orange-400 hover:text-orange-500 font-medium">
+                            Go to Login
+                        </Link>
                     </div>
                 )}
 
@@ -235,7 +227,7 @@ const Profile = () => {
                             {/* Error */}
                             {patchError && (
                                 <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-3 py-2">
-                                    {patchError}
+                                    {patchError.message}
                                 </p>
                             )}
 

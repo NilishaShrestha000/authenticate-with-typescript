@@ -18,7 +18,7 @@ const ServiceCard = () => {
                     onClick={() => navigate(`/service?id=${item.id}`)}
                     className={style.services}>
                     <img
-                        src={`http://192.168.150.169:3000/public/${item.image}`}
+                        src={`https://auth.durlavparajuli.com.np/public/${item.image}`}
                         className=" rounded-t-lg object-cover h-100 "
                         alt={item.title}
                     />

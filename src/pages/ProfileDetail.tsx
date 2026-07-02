@@ -1,23 +1,21 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import getAllProfile from "@/hooks/Profile/getAllProfile";
+import useGetAllProfile from "@/hooks/Profile/useGetAllProfile";
 import getProfileId from "@/hooks/Profile/getAllProfileId";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FiEdit2, FiX } from "react-icons/fi";
 import { useState } from "react";
 import usePatchUserProfile from "@/hooks/Profile/usePatchUserProfileId";
 import DeleteUser from "@/hooks/Profile/useDeleteProfileId";
-
+import ProfileSidebar from "@/components/ProfileSidebar";
 
 
 const ProfileDetail = () => {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
-    const { profiles } = getAllProfile();
-    const { profileid, loading } = getProfileId();
-    const { patchProfile, loading: patching, error: patchError } = usePatchUserProfile(id);
+    const { data: profiles = [] } = useGetAllProfile();
+    const { data: profileid, isLoading: loading } = getProfileId();
+    const { mutate: patchProfile, isPending: patching, error: patchError } = usePatchUserProfile(id);
     const navigate = useNavigate();
-
-
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [form, setForm] = useState({
@@ -84,134 +82,139 @@ const ProfileDetail = () => {
     }
 
     return (
-        <div className="p-10">
-            <main className="flex-1 px-4 py-8 lg:px-10 lg:py-10">
+        <div className="min-h-screen bg-background text-foreground flex">
+            <ProfileSidebar />
+            <main className="max-w-6xl mx-auto px-4 py-10 text-foreground">
                 {/* Page title */}
-                <div className="flex items-center gap-4 mb-5">
-                    <h2 className="text-orange-500 text-lg font-bold">Profile Details</h2>
-                    <span className="flex grow border-t border-gray-400 dark:border-gray-700"></span>
-                </div>
-
-                {/* Header card */}
-                <div className="border border-gray-400 dark:border-gray-700 rounded-2xl p-6 flex items-center gap-6 bg-white/5 mb-6">
-                    <div className="w-20 h-20 rounded-full border-2 border-gray-400 dark:border-violet-400 bg-violet-400/20 flex items-center justify-center text-violet-400 text-3xl font-bold shrink-0">
-                        {getInitials(profileid.fullName)}
+                <div>
+                    <div className="flex items-center gap-4 mb-5">
+                        <h2 className="text-orange-500 text-lg font-bold">Profile Details</h2>
+                        <span className="flex grow border-t border-gray-400 dark:border-gray-700"></span>
                     </div>
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-wide">{profileid.fullName}</h1>
-                        <div className="flex items-center gap-2 mt-1 text-sm text-slate-400">
-                            <MdAdminPanelSettings className="text-violet-400 text-base" />
-                            <span className="capitalize">{profileid.role}</span>
-                        </div>
-                        <div className="text-xs text-slate-500 mt-1">
-                            Member since {formatDate(profileid.createdAt)}
-                        </div>
-                    </div>
-                </div>
 
-                {/* Personal Information */}
-                <div className="border border-gray-400 dark:border-gray-700 rounded-2xl p-6 bg-white/5 mb-6">
-                    <div className="flex justify-between">
-                        <h2 className="text-xl font-semibold text-orange-400 mb-6">Personal Information</h2>
-
-                        <div className="flex gap-4">
-                            <button
-                                onClick={openEdit}
-                                className="flex items-center gap-2 text-sm border border-gray-600 hover:border-violet-400 hover:text-violet-400 px-2 py-1 rounded-lg transition-all duration-200">
-                                <FiEdit2 className="text-sm" />
-                                Edit
-                            </button>
-                            {id && <DeleteUser id={id} />}
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div>
-                            <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Full Name</p>
-                            <p className="text-lg font-medium">{profileid.fullName}</p>
+                    {/* Header card */}
+                    <div className="border border-gray-400 dark:border-gray-700 rounded-2xl p-6 flex items-center gap-6 bg-white/5 mb-6">
+                        <div className="w-20 h-20 rounded-full border-2 border-gray-400 dark:border-violet-400 bg-violet-400/20 flex items-center justify-center text-violet-400 text-3xl font-bold shrink-0">
+                            {getInitials(profileid.fullName)}
                         </div>
                         <div>
-                            <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Email Address</p>
-                            <p className="text-lg font-medium">{profileid.email}</p>
-                        </div>
-                        <div>
-                            <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Phone Number</p>
-                            <p className="text-lg font-medium">{profileid.phone || "—"}</p>
-                        </div>
-                        <div>
-                            <p className="text-md text-slate-500 uppercase tracking-widest mb-1">User Role</p>
-                            <p className="text-lg font-medium capitalize">{profileid.role}</p>
-                        </div>
-                        <div>
-                            <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Account ID</p>
-                            <p className="text-lg font-medium text-slate-400 truncate">{profileid.id}</p>
-                        </div>
-                        <div>
-                            <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Joined</p>
-                            <p className="text-lg font-medium">{formatDate(profileid.createdAt)}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Account Status */}
-                <div className="border border-gray-400 dark:border-gray-700 rounded-2xl p-6 bg-white/5">
-                    <h2 className="text-xl font-semibold text-orange-400 mb-6">Account Status</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="border border-gray-400 dark:border-gray-700 rounded-xl p-4 bg-white/5">
-                            <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Status</p>
-                            <div className="flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
-                                <span className="text-lg font-medium text-green-400">Active</span>
+                            <h1 className="text-2xl font-bold tracking-wide">{profileid.fullName}</h1>
+                            <div className="flex items-center gap-2 mt-1 text-sm text-slate-400">
+                                <MdAdminPanelSettings className="text-violet-400 text-base" />
+                                <span className="capitalize">{profileid.role}</span>
+                            </div>
+                            <div className="text-xs text-slate-500 mt-1">
+                                Member since {formatDate(profileid.createdAt)}
                             </div>
                         </div>
-                        <div className="border border-gray-400 dark:border-gray-700 rounded-xl p-4 bg-white/5">
-                            <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Role</p>
-                            <div className="flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-violet-400 inline-block"></span>
-                                <span className="text-lg font-medium capitalize">{profileid.role}</span>
+                    </div>
+
+
+                    {/* Personal Information */}
+                    <div className="border border-gray-400 dark:border-gray-700 rounded-2xl p-6 bg-white/5 mb-6">
+                        <div className="flex justify-between">
+                            <h2 className="text-xl font-semibold text-orange-400 mb-6">Personal Information</h2>
+
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={openEdit}
+                                    className="flex items-center gap-2 text-sm border border-gray-600 hover:border-violet-400 hover:text-violet-400 px-2 py-1 rounded-lg transition-all duration-200">
+                                    <FiEdit2 className="text-sm" />
+                                    Edit
+                                </button>
+                                {id && <DeleteUser id={id} />}
                             </div>
                         </div>
-                        <div className="border border-gray-400 dark:border-gray-700 rounded-xl p-4 bg-white/5">
-                            <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Member Since</p>
-                            <span className="text-lg font-medium">{formatDate(profileid.createdAt)}</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Full Name</p>
+                                <p className="text-lg font-medium">{profileid.fullName}</p>
+                            </div>
+                            <div>
+                                <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Email Address</p>
+                                <p className="text-lg font-medium">{profileid.email}</p>
+                            </div>
+                            <div>
+                                <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Phone Number</p>
+                                <p className="text-lg font-medium">{profileid.phone || "—"}</p>
+                            </div>
+                            <div>
+                                <p className="text-md text-slate-500 uppercase tracking-widest mb-1">User Role</p>
+                                <p className="text-lg font-medium capitalize">{profileid.role}</p>
+                            </div>
+                            <div>
+                                <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Account ID</p>
+                                <p className="text-lg font-medium text-slate-400 truncate">{profileid.id}</p>
+                            </div>
+                            <div>
+                                <p className="text-md text-slate-500 uppercase tracking-widest mb-1">Joined</p>
+                                <p className="text-lg font-medium">{formatDate(profileid.createdAt)}</p>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Account Status */}
+                    <div className="border border-gray-400 dark:border-gray-700 rounded-2xl p-6 bg-white/5">
+                        <h2 className="text-xl font-semibold text-orange-400 mb-6">Account Status</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div className="border border-gray-400 dark:border-gray-700 rounded-xl p-4 bg-white/5">
+                                <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Status</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+                                    <span className="text-lg font-medium text-green-400">Active</span>
+                                </div>
+                            </div>
+                            <div className="border border-gray-400 dark:border-gray-700 rounded-xl p-4 bg-white/5">
+                                <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Role</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-violet-400 inline-block"></span>
+                                    <span className="text-lg font-medium capitalize">{profileid.role}</span>
+                                </div>
+                            </div>
+                            <div className="border border-gray-400 dark:border-gray-700 rounded-xl p-4 bg-white/5">
+                                <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Member Since</p>
+                                <span className="text-lg font-medium">{formatDate(profileid.createdAt)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {/* Other profiles table */}
+                <div className="text-xl lg:text-2xl m-5 text-center font-bold">
+                    Other Profiles
+                </div>
+
+                <div className="border border-gray-400 dark:border-gray-700 rounded-2xl overflow-hidden bg-white/5">
+                    <table className="w-full text-sm">
+                        <thead>
+                            <tr className="border-b border-gray-400 dark:border-gray-700 text-left">
+                                <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Full Name</th>
+                                <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Email</th>
+                                <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Phone</th>
+                                <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Role</th>
+                                <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {profiles
+                                .filter((item) => item.id !== id)
+                                .map((item) => (
+                                    <tr
+                                        key={item.id}
+                                        onClick={() => navigate(`/admin/profile?id=${item.id}`)}
+                                        className="border-b border-gray-400/30 dark:border-gray-700/50 hover:bg-violet-400/5 cursor-pointer transition-colors">
+                                        <td className="px-4 py-3 font-medium">{item.fullName}</td>
+                                        <td className="px-4 py-3 text-slate-400">{item.email}</td>
+                                        <td className="px-4 py-3 text-slate-400">{item.phone || "—"}</td>
+                                        <td className="px-4 py-3 capitalize">{item.role}</td>
+                                        <td className="px-4 py-3 text-slate-400">{formatDate(item.createdAt)}</td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </table>
                 </div>
             </main>
-
-            {/* Other profiles table */}
-            <div className="text-xl lg:text-2xl m-5 text-center font-bold">
-                Other Profiles
-            </div>
-
-            <div className="border border-gray-400 dark:border-gray-700 rounded-2xl overflow-hidden bg-white/5">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="border-b border-gray-400 dark:border-gray-700 text-left">
-                            <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Full Name</th>
-                            <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Email</th>
-                            <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Phone</th>
-                            <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Role</th>
-                            <th className="px-4 py-3 text-xs text-slate-500 uppercase tracking-widest">Joined</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {profiles
-                            .filter((item) => item.id !== id)
-                            .map((item) => (
-                                <tr
-                                    key={item.id}
-                                    onClick={() => navigate(`/admin/profile?id=${item.id}`)}
-                                    className="border-b border-gray-400/30 dark:border-gray-700/50 hover:bg-violet-400/5 cursor-pointer transition-colors">
-                                    <td className="px-4 py-3 font-medium">{item.fullName}</td>
-                                    <td className="px-4 py-3 text-slate-400">{item.email}</td>
-                                    <td className="px-4 py-3 text-slate-400">{item.phone || "—"}</td>
-                                    <td className="px-4 py-3 capitalize">{item.role}</td>
-                                    <td className="px-4 py-3 text-slate-400">{formatDate(item.createdAt)}</td>
-                                </tr>
-                            ))}
-                    </tbody>
-                </table>
-            </div>
 
 
             {/* Edit Modal */}

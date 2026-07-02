@@ -21,7 +21,7 @@ const FormInput = ({ label, type, ...props }: FormInputProps) => {
                 {...props}
                 {...field}
                 type={isPassword ? (showPassword ? "text" : "password") : type}
-                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 text-xl lg:text-2xl mt-2 focus:outline-none focus:ring-1 focus:ring-violet-400"
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 text-xl lg:text-2xl mt-2 focus:outline-none focus:ring-1 focus:ring-orange-400"
             />
 
             {isPassword && (

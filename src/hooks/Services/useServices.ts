@@ -3,16 +3,17 @@ import Api from "@/Api/api";
 
 export interface Service {
     id: string;
-    image: string;
-    service: string;
     title: string;
-    description: string;
     shortDescription: string;
-    tags: string[];
-    createdAt: string;
+    description: string;
+    icon: string;
+    image: string;
     price: number;
     currency: string;
     isActive: boolean;
+    order: string;
+    tags: string[];
+    createdAt: string;
 }
 
 interface UseServicesReturn {

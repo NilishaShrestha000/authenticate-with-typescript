@@ -1,4 +1,4 @@
-import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
+import { RiLockPasswordLine } from "react-icons/ri";
 import { LuLogOut, LuMessageSquare } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
@@ -20,25 +20,24 @@ const getInitials = (name: string): string => {
 
 const ProfileSidebar = () => {
     const { profile } = useMyProfile();
-    const { user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
     const location = useLocation();
 
     const sidebarLinks: SidebarLink[] = [
         { label: "My Profile", to: "/profile", icon: <FaRegUser /> },
-        { label: "Reset Password", to: "/reset-password", icon: <RiLockPasswordLine /> },
-        { label: "Forgot Password", to: "/forgot-password", icon: <RiLockPasswordFill /> },
+        { label: "Settings", to: "/settings", icon: <RiLockPasswordLine /> },
         ...(user?.role === "admin" ? [
             { label: "Queries", to: "/admin/querries", icon: <LuMessageSquare /> },
             { label: "All Profiles", to: "/admin/allprofile", icon: <FaRegUser /> },
-
         ] : []),
-        { label: "Logout", to: "/logout", icon: <LuLogOut /> },
+        ...(isAuthenticated ? [
+            { label: "Logout", to: "/logout", icon: <LuLogOut /> },] : []),
     ];
 
     return (
         <>
             {/* Desktop sidebar */}
-            <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-gray-700 px-4 py-8 gap-2">
+            <aside className="hidden lg:flex flex-col lg:w-64 shrink-0 border-r border-gray-700 px-4 py-8 gap-2">
                 {profile && (
                     <div className="flex flex-col items-center gap-3 pb-6 mb-4 border-b border-gray-700">
                         <div className="w-14 h-14 rounded-full border-2 border-violet-400 bg-violet-400/20 flex items-center justify-center text-violet-400 text-xl font-bold">

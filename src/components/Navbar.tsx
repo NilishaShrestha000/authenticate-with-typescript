@@ -84,6 +84,22 @@ const Navbar = ({ setSlide }: NavbarProps) => {
                                     {user?.email}
                                 </div>
                                 <Link to="/profile" onClick={() => setMenuOpen(false)} className={style.dropdownItem}>Profile</Link>
+                                <Link to="/settings" onClick={() => setMenuOpen(false)} className={style.dropdownItem}>
+
+                                    Account Settings
+                                </Link>
+
+                                {user?.role === "admin" && (
+                                    <>
+                                        <div className="border-t border-gray-300 my-1" />
+                                        <Link to="/admin/allprofile" onClick={() => setMenuOpen(false)} className={style.dropdownItem}>
+                                            Admin Dashboard
+                                        </Link>
+                                    </>
+                                )}
+
+
+                                <div className="border-t border-gray-300 my-1" />
                                 <Link to="/logout" onClick={() => setMenuOpen(false)} className={style.dropdownItem}>Logout</Link>
                             </div>
                         )}

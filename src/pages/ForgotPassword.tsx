@@ -1,28 +1,28 @@
 import { Formik, Form } from "formik";
 import { FaLock } from "react-icons/fa";
 import FormInput from "@/components/FormInput";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ForgotSchema } from "@/validation/authSchema";
 import { ToastContainer, toast } from "react-toastify";
 import Api from "@/Api/api";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 interface ForgotValues {
     email: string;
 }
 
 const ForgotPassword = () => {
-    const navigate = useNavigate()
+    const { isAuthenticated } = useAuth();
+
     const handleSubmit = async (values: ForgotValues): Promise<void> => {
+
         try {
             const res = await Api.post<{ resetLink: string }>("/api/auth/forgot-password", {
                 email: values.email,
             });
-            toast("You can change your password now.");
-            navigate('/')
-            // setTimeout(() => {
-            //     window.location.href = res.data.resetLink;
-            // }, 2000);
+            toast("If that email exists, a reset link has been sent. Check both inbox and span of the email.")
+            console.log(res.data);
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || "Not valid");
@@ -55,9 +55,10 @@ const ForgotPassword = () => {
                                     <button className="w-full border rounded px-4 py-2 bg-orange-600/50 hover:bg-orange-800/50 text-white">Send Reset Link</button>
                                     <ToastContainer />
                                 </div>
-                                <div className="mt-5 justify-center flex">
+
+                                {!isAuthenticated && <div className="mt-5 justify-center flex">
                                     <Link to="/login" className="text-orange-400 hover:text-red-500">Back to Login</Link>
-                                </div>
+                                </div>}
                             </Form>
                         </Formik>
                     </div>
